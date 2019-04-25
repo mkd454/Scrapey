@@ -1,11 +1,5 @@
 var express = require("express");
-var logger = require("morgan");
 var mongoose = require("mongoose");
-var axios = require("axios");
-var cheerio = require("cheerio");
-
-// Require all models
-var db = require("./models");
 
 var PORT = process.env.PORT || 3000;
 
@@ -14,8 +8,6 @@ var app = express();
 
 // Configure middleware
 
-// Use morgan logger for logging requests
-app.use(logger("dev"));
 // Parse request body as JSON
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
@@ -29,7 +21,7 @@ app.engine("handlebars", exphbs({ defaultLayout: "main" }));
 app.set("view engine", "handlebars");
 
 // Import routes and give the server access to them.
-var routes = require("./controllers/mongoHeadlines.js");
+var routes = require("./controller/mongoHeadlines");
 
 app.use(routes);
 
