@@ -4,6 +4,7 @@ var express = require("express");
 var router = express.Router();
 var axios = require("axios");
 var cheerio = require("cheerio");
+require("path");
 
 // Routes
 
@@ -88,6 +89,18 @@ router.post("/articles/:id", function(req, res) {
     .catch(function(err) {
       res.json(err);
     });
+});
+
+//////////////////////////////////////////////////
+// Routing for handlebars
+//////////////////////////////////////////////////
+
+router.get("/", function(req,res) {
+  res.render("index", {
+    title: "Home Page",
+    customcss: "<link rel=\"stylesheet\" type=\"text/css\" href=\"/assets/css/styles.css\"></link>",
+    customjs: "<script type=\"text/javascript\" src=\"/assets/js/app.js\"></script>"
+  });
 });
 
 module.exports = router;
