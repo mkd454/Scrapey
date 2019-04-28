@@ -21,7 +21,7 @@ $(document).on("click", "p", function() {
   })
     // With that done, add the note information to the page
     .then(function(data) {
-      console.log(data);
+      // console.log(data);
       // The title of the article
       $("#notes").append("<h2>" + data.headline + "</h2>");
       // An input to enter a new title
@@ -30,15 +30,26 @@ $(document).on("click", "p", function() {
       $("#notes").append("<textarea id='bodyinput' name='body'></textarea>");
       // A button to submit a new note, with the id of the article saved to it
       $("#notes").append("<button data-id='" + data._id + "' id='savenote'>Save Note</button>");
+      console.log(data.note);
 
-      // If there's a note in the article
-      if (data.note) {
-        // Place the title of the note in the title input
-        $("#titleinput").val(data.note.title);
-        // Place the body of the note in the body textarea
-        $("#bodyinput").val(data.note.body);
-      }
+      $.ajax({
+        method: "GET",
+        url: "/notes/" + data.note
+      }).then(function(noteData) {
+        console.log(noteData);
+        // Display all notes for article underneath & put in option to delete the notes
+        $("#notes").append(`\n
+          <div class="card w-50">
+            <div class="card-body">
+              <h5 class="card-title">${noteData[0].title}</h5>
+              <p class="card-text">${noteData[0].body}</p>
+              <a href="#" class="btn btn-primary">Delete Comment</a>
+            </div>
+          </div>`);
+      })
+      
     });
+
 });
 
 // When you click the savenote button

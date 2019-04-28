@@ -46,7 +46,7 @@ router.get("/scrape", function(req,res) {
           console.log(err);
         });
     });
-    res.send("Scrape Complete");
+    res.redirect(200,"..");
   });
 });
 
@@ -80,11 +80,33 @@ router.post("/articles/:id", function(req, res) {
       // If a Note was created successfully, find one Article with an `_id` equal to `req.params.id`. Update the Article to be associated with the new Note
       // { new: true } tells the query that we want it to return the updated User -- it returns the original by default
       // Since our mongoose query returns a promise, we can chain another `.then` which receives the result of the query
-      return db.Article.findOneAndUpdate({ _id: req.params.id }, { note: dbNote._id }, { new: true });
+      return db.Article.findOneAndUpdate({}, { $push: { _id: req.params.id }}, { note: dbNote._id }, { new: true });
     })
     .then(function(dbArticle) {
       // If we were able to successfully update an Article, send it back to the client
       res.json(dbArticle);
+    })
+    .catch(function(err) {
+      res.json(err);
+    });
+});
+
+// Route for showing all articles with notes
+router.get("/notes", function(req, res) {
+  db.Note.find({})
+    .then(function(dbNote) {
+      res.json(dbNote);
+    })
+    .catch(function(err) {
+      res.json(err);
+    });
+});
+
+// Route for showing specifci article with notes
+router.get("/notes/:id", function(req, res) {
+  db.Note.find({_id: req.params.id})
+    .then(function(dbNote) {
+      res.json(dbNote);
     })
     .catch(function(err) {
       res.json(err);
